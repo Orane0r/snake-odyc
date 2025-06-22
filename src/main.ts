@@ -1,6 +1,7 @@
 import { createGame } from "odyc";
 import { GAME_SIZE } from "./constants";
 import type { Position } from "./types";
+import { Direction } from "./enums";
 
 const game = createGame({
   player: {
@@ -66,24 +67,69 @@ function setInitialPosition(): Position {
   ];
 }
 
+/**
+ * Determines the initial direction based on the player's initial position
+ * and the available space in each direction.
+ * The player will move towards the direction with the most space.
+ */
+function getInitialDirection(): Direction {
+  const [x, y] = game.player.position;
+
+  const spaceRight = game.width - 1 - x;
+  const spaceLeft = x;
+  const spaceDown = game.height - 1 - y;
+  const spaceUp = y;
+
+  const maxSpace = Math.max(spaceRight, spaceLeft, spaceDown, spaceUp);
+
+  switch (maxSpace) {
+    case spaceRight:
+      return Direction.Right;
+    case spaceLeft:
+      return Direction.Left;
+    case spaceDown:
+      return Direction.Down;
+    case spaceUp:
+      return Direction.Up;
+    default:
+      return Direction.Down;
+  }
+}
+
 const FPS: number = 3;
 let lastUpdate = 0;
 const interval = 1000 / FPS;
+const direction: Direction = getInitialDirection();
 
 /**
- * Moves the player to the right with given FPS.
+ * Moves the player with given FPS and direction
  * @param now Current timestamp in milliseconds.
  */
-function animate(now: number) {
+function movePlayer(now: number) {
   if (now - lastUpdate > interval) {
     lastUpdate = now;
 
     const [x, y] = game.player.position;
-    const newX = (x + 1) % game.width;
-    game.player.position = [newX, y];
+
+    switch (direction) {
+      case Direction.Right:
+        game.player.position = [x + 1, y];
+        break;
+      case Direction.Left:
+        game.player.position = [x - 1, y];
+        break;
+      case Direction.Down:
+        game.player.position = [x, y + 1];
+        break;
+      case Direction.Up:
+        game.player.position = [x, y - 1];
+        break;
+      default:
+        break;
+    }
   }
 
-  requestAnimationFrame(animate);
+  requestAnimationFrame(movePlayer);
 }
 
-requestAnimationFrame(animate)
+requestAnimationFrame(movePlayer)
