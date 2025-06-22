@@ -1,12 +1,13 @@
 import { createGame } from "odyc";
 import { GAME_SIZE } from "./constants";
-import type { Position } from "./types";
+import type { Input, Position } from "./types";
 import { Direction } from "./enums";
 
 const game = createGame({
   player: {
     sprite: 3,
     position: setInitialPosition(),
+    onInput: onPlayerInput,
   },
   templates: {
     g: {
@@ -111,6 +112,7 @@ let restarted: boolean = false;
  * If the player moves out of bounds, the game ends.
  * @param now Current timestamp in milliseconds.
  */
+// TOOD changer et mettre dans onTurn ?
 function movePlayer(now: number) {
   if (restarted) {
     game.player.position = setInitialPosition();
@@ -154,4 +156,25 @@ function movePlayer(now: number) {
   requestAnimationFrame(movePlayer);
 }
 
-requestAnimationFrame(movePlayer)
+function onPlayerInput(input: Input) {
+  switch (input) {
+    case 'LEFT':
+      direction = Direction.Left;
+      break;
+    case 'UP':
+      direction = Direction.Up;
+      break;
+    case 'RIGHT':
+      direction = Direction.Right;
+      break;
+    case 'DOWN':
+      direction = Direction.Down;
+      break;
+    case 'ACTION':
+      break;
+    default:
+      break;
+  }
+}
+
+requestAnimationFrame(movePlayer);
