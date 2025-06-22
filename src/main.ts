@@ -2,6 +2,7 @@ import { createGame } from "odyc";
 import { FPS, GAME_SIZE } from "./constants";
 import type { Input, Position } from "./types";
 import { Direction } from "./enums";
+import templates from "./templates";
 
 const game = createGame({
   player: {
@@ -9,15 +10,7 @@ const game = createGame({
     position: setInitialPosition(),
     onInput: onPlayerInput,
   },
-  templates: {
-    g: {
-      sprite: 7,
-      solid: false,
-    },
-    a: {
-      sprite: 4
-    },
-  },
+  templates: templates,
   map: `
 		ggaggggg
 		gggggggg
