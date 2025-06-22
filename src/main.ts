@@ -1,5 +1,5 @@
 import { createGame } from "odyc";
-import { GAME_SIZE } from "./constants";
+import { FPS, GAME_SIZE } from "./constants";
 import type { Input, Position } from "./types";
 import { Direction } from "./enums";
 
@@ -100,9 +100,7 @@ function getInitialDirection(): Direction {
   }
 }
 
-const FPS: number = 3;
 let lastUpdate = 0;
-const interval = 1000 / FPS;
 let direction: Direction = getInitialDirection();
 let restarted: boolean = false;
 
@@ -112,7 +110,6 @@ let restarted: boolean = false;
  * If the player moves out of bounds, the game ends.
  * @param now Current timestamp in milliseconds.
  */
-// TOOD changer et mettre dans onTurn ?
 function movePlayer(now: number) {
   if (restarted) {
     game.player.position = setInitialPosition();
@@ -120,7 +117,7 @@ function movePlayer(now: number) {
     restarted = false;
   }
 
-  if (now - lastUpdate > interval) {
+  if (now - lastUpdate > 1000 / FPS) {
     lastUpdate = now;
 
     const [x, y] = game.player.position;
