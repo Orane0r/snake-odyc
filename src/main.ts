@@ -3,10 +3,12 @@ import { FPS, GAME_SIZE } from "./constants";
 import type { Input, Position } from "./types";
 import { Direction } from "./enums";
 import templates from "./templates";
+import { SPRITES } from "./sprites";
+
 
 const game = createGame({
   player: {
-    sprite: 3,
+    sprite: SPRITES.playerHead,
     position: setInitialPosition(),
     onInput: onPlayerInput,
   },
