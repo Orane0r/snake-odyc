@@ -1,6 +1,7 @@
 import { createGame } from "odyc";
 
-createGame({
+const game = createGame({
+
   player: {
     sprite: 3,
     position: [0, 0],
@@ -54,5 +55,27 @@ createGame({
     UP: 'ArrowUp',
     DOWN: 'ArrowDown',
     ACTION: ['Enter', 'Space']
+  },
+});
+
+const FPS: number = 3;
+let lastUpdate = 0;
+const interval = 1000 / FPS;
+
+/**
+ * Moves the player to the right with given FPS.
+ * @param now Current timestamp in milliseconds.
+ */
+function animate(now: number) {
+  if (now - lastUpdate > interval) {
+    lastUpdate = now;
+
+    const [x, y] = game.player.position;
+    const newX = (x + 1) % game.width;
+    game.player.position = [newX, y];
   }
-})
+
+  requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate)
