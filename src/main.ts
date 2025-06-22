@@ -15,7 +15,7 @@ const game = createGame({
     },
     a: {
       sprite: 4
-    }
+    },
   },
   map: `
 		ggaggggg
@@ -60,6 +60,9 @@ const game = createGame({
   },
 });
 
+/**
+ * @returns A random initial position within the game boundaries.
+ */
 function setInitialPosition(): Position {
   return [
     Math.floor(Math.random() * GAME_SIZE),
@@ -99,13 +102,22 @@ function getInitialDirection(): Direction {
 const FPS: number = 3;
 let lastUpdate = 0;
 const interval = 1000 / FPS;
-const direction: Direction = getInitialDirection();
+let direction: Direction = getInitialDirection();
+let restarted: boolean = false;
 
 /**
- * Moves the player with given FPS and direction
+ * Moves the player with given FPS and direction.
+ * If the game has restarted after a game over, resets the player's position and direction.
+ * If the player moves out of bounds, the game ends.
  * @param now Current timestamp in milliseconds.
  */
 function movePlayer(now: number) {
+  if (restarted) {
+    game.player.position = setInitialPosition();
+    direction = getInitialDirection();
+    restarted = false;
+  }
+
   if (now - lastUpdate > interval) {
     lastUpdate = now;
 
@@ -126,6 +138,16 @@ function movePlayer(now: number) {
         break;
       default:
         break;
+    }
+
+    const [newX, newY] = game.player.position;
+    if (newX < 0 ||
+      newX >= game.width ||
+      newY < 0 ||
+      newY >= game.height) {
+
+      restarted = true;
+      game.end('Game Over');
     }
   }
 
