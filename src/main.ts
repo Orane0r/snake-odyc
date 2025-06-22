@@ -1,10 +1,11 @@
 import { createGame } from "odyc";
+import { GAME_SIZE } from "./constants";
+import type { Position } from "./types";
 
 const game = createGame({
-
   player: {
     sprite: 3,
-    position: [0, 0],
+    position: setInitialPosition(),
   },
   templates: {
     g: {
@@ -43,10 +44,10 @@ const game = createGame({
   dialogColor: 1,
   dialogBorder: 1,
   dialogInternvalMs: 30,
-  screenWidth: 8,
-  screenHeight: 8,
-  cellWidth: 8,
-  cellHeight: 8,
+  screenWidth: GAME_SIZE,
+  screenHeight: GAME_SIZE,
+  cellWidth: GAME_SIZE,
+  cellHeight: GAME_SIZE,
   background: 1,
   volume: 0.5,
   controls: {
@@ -57,6 +58,13 @@ const game = createGame({
     ACTION: ['Enter', 'Space']
   },
 });
+
+function setInitialPosition(): Position {
+  return [
+    Math.floor(Math.random() * GAME_SIZE),
+    Math.floor(Math.random() * GAME_SIZE)
+  ];
+}
 
 const FPS: number = 3;
 let lastUpdate = 0;
